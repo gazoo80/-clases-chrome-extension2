@@ -5,28 +5,32 @@ function getJobsInformation() {
     ...document.querySelectorAll("div[id^=jobcard]"),
   ];
 
-  const jobJsonInformation = jobsElementsInformation.map((job) => {
+  const jobsInformation = jobsElementsInformation.map((jobElement) => {
     const [
-      { href: url },
+      {},
       {
         children: [
           {
             children: [
-              { innerText: content },
+              { innerText: date },
               { innerText: title },
               { innerText: salary },
             ],
           },
         ],
       },
-    ] = job.children;
+    ] = jobElement.children;
 
-    return { url, title, salary, date: content.split("\n")[0] };
+    const ciudad = jobElement.querySelector('p[class*=zonesLinks]').innerText;
+
+    return { title, salary: salary.replace("\n", " "), date: date.split("\n")[0], ciudad };
   });
 
-  console.log(jobJsonInformation);
+  console.log(jobsInformation);
 
-  return jobJsonInformation;
+  const todayJobsInformation = jobsInformation.filter((job) => job.date === 'Hoy');
+
+  return todayJobsInformation;
 }
 
 // Creamos un puerto para comunicarnos con el runtime de chrome. Se dispara el evento onConnect
